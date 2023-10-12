@@ -7,7 +7,7 @@ client_jws_helpers.getClientCredentialJwt = function() {
     var header = {
         'typ': 'JWT',
         'kid': pm.environment.get('OB-SIGNING-KEY-ID'),
-        'alg': 'RS256'
+        'alg': 'PS256'
     };
     console.info("kid is " + pm.environment.get('OB-SIGNING-KEY-ID'))
     var exp = (new Date().getTime() / 1000) + 60*5;

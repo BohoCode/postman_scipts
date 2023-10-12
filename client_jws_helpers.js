@@ -69,6 +69,7 @@ client_jws_helpers.createDetatchedSignatureForm = function (compactSerializedJws
 }
 
 client_jws_helpers.createAuthorizeRequestUrl = function (scope, consentId) {
+    console.log("in createAuthorizeRequestUrl(\"" + scope + "\", " + consentId + ")");
     var jwtSecret = pm.environment.get('OB-SEAL-PRIVATE-KEY') || ''
     console.log("jwtSecret is " + jwtSecret)
     var kid = pm.environment.get('OB-SIGNING-KEY-ID')

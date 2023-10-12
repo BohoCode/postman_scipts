@@ -10,14 +10,16 @@ client_jws_helpers.getClientCredentialJwt = function() {
     };
     console.info("kid is " + pm.environment.get('OB-SIGNING-KEY-ID'))
     var exp = (new Date().getTime() / 1000) + 60*5;
-    console.log(pm.environment.get("as_issuer_id"))
+    
     var data = {
             "exp": exp,
             "iss": pm.environment.get("client_id"),
             "sub": pm.environment.get("client_id"),
-            "aud": pm.environment.get("AS_ISSUER_ID"),
+            "aud": pm.environment.get("as_issuer_id"),
             "jti": pm.variables.replaceIn('{{$guid}}')
     }
+
+    console.log("data in client credentials jwt: " + data)
     // sign token
     // console.log("call: " + JSON.stringify({jwtSecret: jwtSecret, data: data, header: header}) );
     //var signedToken = pmlib.jwtSign(jwtSecret, data, header, exp = 600, alg = "PS256")

@@ -1,11 +1,12 @@
 client_jws_helpers = {};
+
 client_jws_helpers.getClientCredentialJwt = function() {    
     var jwtSecret = pm.environment.get('OB-SEAL-PRIVATE-KEY') || ''
     // Set headers for JWT
     var header = {
         'typ': 'JWT',
         'kid': pm.environment.get('OB-SIGNING-KEY-ID'),
-        'alg': 'PS256'
+        'alg': 'RS256'
     };
     console.info("kid is " + pm.environment.get('OB-SIGNING-KEY-ID'))
     var exp = (new Date().getTime() / 1000) + 60*5;
@@ -24,7 +25,7 @@ client_jws_helpers.getClientCredentialJwt = function() {
     return signedToken;
 };
 
-client_jws_helpers.getDetachedJwsSignature = function() {
+client_jws_helpers.createCompactSerializedJws = function() {
     var privateKey = pm.environment.get('OB-SEAL-PRIVATE-KEY');
 
     var currentTimestamp = Math.floor(Date.now() / 1000 - 1000)
@@ -57,4 +58,9 @@ client_jws_helpers.getDetachedJwsSignature = function() {
     return jwt
 };
 
-
+client_jws_helpers.createDetatchedSignatureForm = function (compactSerializedJws){
+    var jwtElements = jws.split(".");
+    var detached_signature = jwtElements[0] + ".." + jwtElements[2];
+    console.log("detached_signature:" + detached_signature);
+    return detached_signature;
+}

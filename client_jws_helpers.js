@@ -97,7 +97,7 @@ client_jws_helpers.createAuthorizeRequestUrl = function (scope, consentId) {
               "essential": true
             },
             "openbanking_intent_id": {
-              "value": pm.environment.get(consentId),
+              "value": consentId,
               "essential": true
             }
           }

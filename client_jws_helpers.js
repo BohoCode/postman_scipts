@@ -1,6 +1,7 @@
 client_jws_helpers = {};
 
 client_jws_helpers.getClientCredentialJwt = function() {    
+    console.log("in getClientCredentialsJwt");
     var jwtSecret = pm.environment.get('OB-SEAL-PRIVATE-KEY') || ''
     // Set headers for JWT
     var header = {

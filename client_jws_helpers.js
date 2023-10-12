@@ -67,3 +67,56 @@ client_jws_helpers.createDetatchedSignatureForm = function (compactSerializedJws
     console.log("detached_signature:" + detached_signature);
     return detached_signature;
 }
+
+client_jws_helpers.createAuthorizeRequestUrl(scope, consentId){
+    var jwtSecret = pm.environment.get('OB-SEAL-PRIVATE-KEY') || ''
+    console.log("jwtSecret is " + jwtSecret)
+    var kid = pm.environment.get('OB-SIGNING-KEY-ID')
+    console.log("kid is " + kid)
+    // Set headers for JWT
+    var audience = pm.environment.get('as_issuer_id')
+    console.log("audience is " +audience)
+    
+    var exp = (new Date().getTime() / 1000) + 60*5;
+    var header = {
+        'typ': 'JWT',
+        'kid': kid,
+        'alg': 'PS256'
+    };
+    
+    var data = {
+          "aud": audience,
+          "scope": scope,
+          "iss": pm.environment.get("client_id"),
+          "exp": exp,
+          "claims": {
+            "id_token": {
+              "acr": {
+              "value": "urn:openbanking:psd2:ca",
+              "essential": true
+            },
+            "openbanking_intent_id": {
+              "value": pm.environment.get(consentId),
+              "essential": true
+            }
+          }
+        },
+        "response_type": "code id_token",
+        "redirect_uri": pm.environment.get("client_redirect_uri"),
+        "state": "10d260bf-a7d9-444a-92d9-7b7a5f088208",
+        "nonce": "10d260bf-a7d9-444a-92d9-7b7a5f088208",
+        "client_id": pm.environment.get("client_id")
+    }
+    
+    // sign token
+    var signedToken =  KJUR.jws.JWS.sign(null, header, data, jwtSecret);
+    
+    var link = pm.environment.get("as_authorization_endpoint") + 
+        "?client_id=" + pm.environment.get("client_id") + 
+        "&response_type=code id_token&redirect_uri=" + pm.environment.get("client_redirect_uri") + 
+        "&scope=openid payments&state=10d260bf-a7d9-444a-92d9-7b7a5f088208&nonce=10d260bf-a7d9-444a-92d9-7b7a5f088208&request=" + 
+        signedToken;
+    
+    console.log("link is " + link)
+    return link;
+}

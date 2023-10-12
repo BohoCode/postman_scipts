@@ -20,7 +20,7 @@ client_jws_helpers.getClientCredentialJwt = function() {
             "jti": pm.variables.replaceIn('{{$guid}}')
     }
 
-    console.log("data in client credentials jwt: " + data)
+    console.log("data in client credentials jwt: " + JSON.stringify(data))
     // sign token
     // console.log("call: " + JSON.stringify({jwtSecret: jwtSecret, data: data, header: header}) );
     //var signedToken = pmlib.jwtSign(jwtSecret, data, header, exp = 600, alg = "PS256")
